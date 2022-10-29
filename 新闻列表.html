@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/news.css">
+    <script src="lib/axios.js"></script>
+    <script src="lib/vue-2.6.12.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="news-item" v-for="item in newsList">
+            <img class="thumb" :src="'http://www.liulongbin.top:3006' + item.img" alt="" />
+            <div class="right-box">
+                <h1 class="title">{{item.title}}</h1>
+                <div class="tags">
+                    <span v-for="tag in item.tags">{{tag}}</span>
+                </div>
+                <div class="footer">
+                    <div>
+                        <span>{{item.source}}</span>&nbsp;&nbsp;
+                        <span>{{item.time }}</span>
+                    </div>
+                    <span>评论数：{{item.cmtcount}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                newsList: []
+            },
+            methods: {
+                getNewsList: async function () {
+                    const { data: res } = await axios.get('http://www.liulongbin.top:3006/api/news')
+                    if (res.status !== 200) {
+                        return alert('获取新闻列表数据失败！')
+                    }
+                    for (var i = 0; i < res.data.length; i++) {
+                        // 把每一项的 tags 属性，从字符串改造成字符串的数组
+                        res.data[i].tags = res.data[i].tags.split(',')
+                    }
+                    this.newsList = res.data
+                    console.log(res.data);
+                }
+            },
+            created() {
+                this.getNewsList()
+            }
+        })
+    </script>
+</body>
+
+</html>
