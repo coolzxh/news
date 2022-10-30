@@ -38,7 +38,13 @@
             },
             methods: {
                 getNewsList: async function () {
-                    const { data: res } = await axios.get('http://www.liulongbin.top:3006/api/news')
+                    const { data: res } = await axios.get('http://www.liulongbin.top:3006/api/news',
+                        {
+                            headers: {
+                                'Cookie': '',
+                                'User-Agent': 'Apifox/1.0.0 (https://www.apifox.cn)'
+                            }
+                        })
                     if (res.status !== 200) {
                         return alert('获取新闻列表数据失败！')
                     }
